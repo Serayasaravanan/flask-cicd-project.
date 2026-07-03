@@ -5,6 +5,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh """
+                    docker rmi nginx:latest 2>/dev/null || true
 
                  """
 
