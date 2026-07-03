@@ -5,7 +5,8 @@ pipeline {
         stage('Build') {
             steps {
                 sh """
-                    docker rmi nginx:latest 2>/dev/null || true
+                    sudo docker rmi ghcr.io/serayasaravanan/nginx:latest 2>/dev/null || true
+                    sudo docker pull ghcr.io/serayasaravanan/nginx:latest
 
                  """
 
@@ -15,7 +16,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh """
-                   sudo systemctl restart ${params.SERVICE}
+                   sudo docker stop fe  2>/dev/null || true
+                   sudo docker rm fe  2>/dev/null || true
+                   sudo docker run -d -p 80:80 -v $(pwd)/index.html:/user/share/html/index.html --name fe ghcr.io/serayasaravanan/nginx:latest 
+                   
                 """
             }
         }
